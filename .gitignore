@@ -1,6 +1,7 @@
 venv
-venv-release
+__pycache__
 
 .idea
 
+temp-release
 upnqr-lambda-release.zip
