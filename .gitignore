@@ -1,0 +1,6 @@
+venv
+venv-release
+
+.idea
+
+upnqr-lambda-release.zip
