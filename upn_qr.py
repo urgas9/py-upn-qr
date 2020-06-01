@@ -66,7 +66,7 @@ class UPNQR:
 
     @staticmethod
     def validate_fields(source: dict) -> Generator[ValidationError, Any, None]:
-        with open("upn-qr-schema.json") as f:
+        with open("upn_qr_schema.json") as f:
             json_schema = json.load(f)
 
         # Create a new format checker instance.
@@ -109,7 +109,7 @@ class UPNQR:
         )
         return my_validator.iter_errors(source)
 
-    def generate_qr_code(self) -> PilImage:
+    def make_qr_code(self) -> PilImage:
         qr = qrcode.QRCode(
             version=15,
             error_correction=qrcode.constants.ERROR_CORRECT_M,

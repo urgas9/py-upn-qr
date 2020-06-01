@@ -1,7 +1,7 @@
 import base64
 from io import BytesIO
 
-from qr_generator import UPNQR
+from upn_qr import UPNQR
 
 
 def lambda_handler(event, context):
@@ -13,7 +13,7 @@ def lambda_handler(event, context):
             "errors": {".".join(e.path): e.message for e in errors}
         }
 
-    image = upnqr.generate_qr_code()
+    image = upnqr.make_qr_code()
 
     with BytesIO() as buffer:
         image.save(buffer, "png")
