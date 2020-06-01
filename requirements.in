@@ -1,2 +1,3 @@
 boto3
 qrcode[pil]
+jsonschema

@@ -1,0 +1,64 @@
+{
+  "type": "object",
+  "required": [
+    "namen_placila",
+    "koda_namena",
+    "prejemnik_iban",
+    "prejemnik_referenca",
+    "prejemnik_ime",
+    "prejemnik_ulica",
+    "prejemnik_kraj"
+  ],
+  "properties": {
+    "placnik_ime": {
+      "type": "string",
+      "maxLength": 33
+    },
+    "placnik_ulica": {
+      "type": "string",
+      "maxLength": 33
+    },
+    "placnik_kraj": {
+      "type": "string",
+      "maxLength": 33
+    },
+    "znesek": {
+      "type": "string",
+      "format": "amount-slo",
+      "description": "Pricakovani format zneska je ***#.##0,00"
+    },
+    "koda_namena": {
+      "type": "string",
+      "maxLength": 4,
+      "minLength": 4
+    },
+    "namen_placila": {
+      "type": "string",
+      "maxLength": 42
+    },
+    "rok_placila": {
+      "type": "string",
+      "format": "date-slo",
+      "description": "Pricakovani format DD.MM.LLLL"
+    },
+    "prejemnik_iban": {
+      "type": "string"
+    },
+    "prejemnik_referenca": {
+      "type": "string",
+      "maxLength": 26
+    },
+    "prejemnik_ime": {
+      "type": "string",
+      "maxLength": 33
+    },
+    "prejemnik_ulica": {
+      "type": "string",
+      "maxLength": 33
+    },
+    "prejemnik_kraj": {
+      "type": "string",
+      "maxLength": 33
+    }
+  }
+}
