@@ -1,56 +1,10 @@
 import json
-import locale
 from datetime import datetime
-from typing import Generator, List
-
-from jsonschema import Draft4Validator, Draft7Validator, FormatChecker, ValidationError, validate, validators
+from typing import Any, Generator
 
 import qrcode
+from jsonschema import Draft7Validator, FormatChecker, ValidationError, validators
 from qrcode.image.pil import PilImage
-
-
-def generate_data_string():
-    # 19 fields, control sum and reserve fields get populated/calculated automatically
-    values = [
-        "UPNQR",
-        "",
-        "",
-        "",
-        "",
-        "Ime plačnika",
-        "Ulica in št. plačnika",
-        "Kraj plačnika",
-        "11.23",  # znesek, 11 znakov
-        "",
-        "",
-        "OTHR",  # Koda namena, 4 znaki
-        "Namen plačila ",  # 42 znakov
-        "26.7.2020",  # Rok placila, 10 znakov
-        "IBAN",  # 34 znakov
-        "Referenca prejemnika",  # 26 znakov
-        "Ime prejemnika",  # 33 znakov
-        "Ulica in št. prejemnika",  # 33 znakov
-        "Kraj prejemnika",  # 33 znakov
-    ]
-
-    s = "\n".join(values)
-    s = f"{s}\n"
-    contr_sum = len(s)
-
-    return f"{s}{contr_sum:03d}\n"
-
-
-def generate_qr_code() -> PilImage:
-    qr = qrcode.QRCode(
-        version=15,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(generate_data_string())
-    qr.make(fit=True)
-
-    return qr.make_image(fill_color="black", back_color="white")
 
 
 class UPNQR:
@@ -76,36 +30,42 @@ class UPNQR:
     Kraj prejemnika         |   Max. 33        |    Obvezno.
     """
 
-    placnik_ime: str
-    placnik_ulica: str
-    placnik_kraj: str
-    znesek: str  # Format »***#.##0,00«.
-    koda_namena: str
-    namen_placila: str
-    rok_placila: datetime  # Format »DD.MM.LLLL«
-    prejemnik_iban: str
-    prejemnik_referenca: str
-    prejemnik_ime: str
-    prejemnik_ulica: str
-    prejemnik_kraj: str
+    def __init__(self, placnik_ime: str, placnik_ulica: str, placnik_kraj: str, znesek: str, koda_namena: str,
+                 namen_placila: str, rok_placila: str, prejemnik_iban: str, prejemnik_referenca: str,
+                 prejemnik_ime: str, prejemnik_ulica: str, prejemnik_kraj: str):
+        self.placnik_ime = placnik_ime
+        self.placnik_ulica = placnik_ulica
+        self.placnik_kraj = placnik_kraj
+        self.znesek = znesek
+        self.koda_namena = koda_namena
+        self.namen_placila = namen_placila
+        self.rok_placila = rok_placila
+        self.prejemnik_iban = prejemnik_iban
+        self.prejemnik_referenca = prejemnik_referenca
+        self.prejemnik_ime = prejemnik_ime
+        self.prejemnik_ulica = prejemnik_ulica
+        self.prejemnik_kraj = prejemnik_kraj
 
+    @staticmethod
     def from_dict(source: dict) -> "UPNQR":
-        u = UPNQR()
-        u.placnik_ime = source.get("placnik_ime")
-        u.placnik_ulica = source.get("placnik_ulica")
-        u.placnik_kraj = source.get("placnik_kraj")
-        u.znesek = source.get("znesek")
-        u.koda_namena = source.get("koda_namena")
-        u.namen_placila = source.get("namen_placila")
-        u.rok_placila = source.get("rok_placila")
-        u.prejemnik_iban = source.get("prejemnik_iban")
-        u.prejemnik_referenca = source.get("prejemnik_referenca")
-        u.prejemnik_ime = source.get("prejemnik_ime")
-        u.prejemnik_ulica = source.get("prejemnik_ulica")
-        u.prejemnik_kraj = source.get("prejemnik_kraj")
-        return u
+        return UPNQR(
+            placnik_ime=source.get("placnik_ime"),
+            placnik_ulica=source.get("placnik_ulica"),
+            placnik_kraj=source.get("placnik_kraj"),
+            znesek=source.get("znesek"),
+            koda_namena=source.get("koda_namena"),
+            namen_placila=source.get("namen_placila"),
+            rok_placila=source.get("rok_placila"),
+            prejemnik_iban=source.get("prejemnik_iban"),
+            prejemnik_referenca=source.get("prejemnik_referenca"),
+            prejemnik_ime=source.get("prejemnik_ime"),
+            prejemnik_ulica=source.get("prejemnik_ulica"),
+            prejemnik_kraj=source.get("prejemnik_kraj"),
+        )
+        znesek
 
-    def validate_fields(self, source: dict) -> Generator[ValidationError]:
+    @staticmethod
+    def validate_fields(source: dict) -> Generator[ValidationError, Any, None]:
         with open("upn-qr-schema.json") as f:
             json_schema = json.load(f)
 
@@ -141,6 +101,7 @@ class UPNQR:
         # Create a new validator class
         custom_validator = validators.create(
             meta_schema=Draft7Validator.META_SCHEMA,
+            validators=Draft7Validator.VALIDATORS,
         )
         # Create a new instance of your custom validator. Add a custom type.
         my_validator = custom_validator(
@@ -148,18 +109,54 @@ class UPNQR:
         )
         return my_validator.iter_errors(source)
 
+    def generate_qr_code(self) -> PilImage:
+        qr = qrcode.QRCode(
+            version=15,
+            error_correction=qrcode.constants.ERROR_CORRECT_M,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(self._qr_data_string())
+        qr.make(fit=True)
 
-js = {
-    "namen_placila": "2",
-    "prejemnik_kraj": "123",
-    "prejemnik_ime": "Ala",
-    "prejemnik_ulica": "Bla",
-    "prejemnik_iban": "Bla",
-    "prejemnik_referenca": "Bla",
-    "rok_placila": "12.12.2020",
-    "znesek": "213.123,23",
-    "koda_namena": "2345",
-}
-u = UPNQR.from_dict(js)
-print(js)
-print(u.validate_fields(js))
+        return qr.make_image(fill_color="black", back_color="white")
+
+    def _qr_data_string(self):
+
+        def formatted_znesek() -> str:
+            result = f"{self.znesek}00" if "," not in self.znesek else self.znesek
+            cleaned_result = result.replace(",", "").replace(".", "")
+            return cleaned_result.zfill(11)
+
+        def remove_whitespaces(value: str) -> str:
+            return value.replace(" ", "")
+
+        # 19 fields, control sum and reserve fields get populated/calculated automatically
+        values = [
+            "UPNQR",
+            "",
+            "",
+            "",
+            "",
+            self.placnik_ime,
+            self.placnik_ulica,
+            self.placnik_kraj,
+            formatted_znesek(),
+            "",
+            "",
+            self.koda_namena,
+            self.namen_placila,
+            self.rok_placila,
+            remove_whitespaces(self.prejemnik_iban),
+            remove_whitespaces(self.prejemnik_referenca),
+            self.prejemnik_ime,
+            self.prejemnik_ulica,
+            self.prejemnik_kraj,
+        ]
+        # Keep all values as strings - replace Nones with empty string
+        values = [v if v is not None else "" for v in values]
+        s = "\n".join(values)
+        s = f"{s}\n"
+        contr_sum = len(s)
+
+        return f"{s}{contr_sum:03d}\n"
