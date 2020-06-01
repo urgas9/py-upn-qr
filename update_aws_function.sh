@@ -17,7 +17,7 @@ zip -r9 ${OLDPWD}/${output_zip_name} .
 
 # Add source code to the ZIP file
 cd ${OLDPWD}
-zip -g ${output_zip_name} aws_lambda.py qr_generator.py upn-qr-schema.json
+zip -g ${output_zip_name} aws_lambda.py upn_qr.py upn_qr_schema.json
 
 rm -r ${temp_dir}
 
