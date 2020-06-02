@@ -29,43 +29,31 @@ class UPNQR:
     Ulica in št. prejemnika |   Max. 33        |    Obvezno.
     Kraj prejemnika         |   Max. 33        |    Obvezno.
     """
+    _source_dict: dict = None
+    placnik_ime: str = None
+    placnik_ulica: str = None
+    placnik_kraj: str = None
+    znesek: str = None
+    koda_namena: str = None
+    namen_placila: str = None
+    rok_placila: str = None
+    prejemnik_iban: str = None
+    prejemnik_referenca: str = None
+    prejemnik_ime: str = None
+    prejemnik_ulica: str = None
+    prejemnik_kraj: str = None
 
-    def __init__(self, placnik_ime: str, placnik_ulica: str, placnik_kraj: str, znesek: str, koda_namena: str,
-                 namen_placila: str, rok_placila: str, prejemnik_iban: str, prejemnik_referenca: str,
-                 prejemnik_ime: str, prejemnik_ulica: str, prejemnik_kraj: str):
-        self.placnik_ime = placnik_ime
-        self.placnik_ulica = placnik_ulica
-        self.placnik_kraj = placnik_kraj
-        self.znesek = znesek
-        self.koda_namena = koda_namena
-        self.namen_placila = namen_placila
-        self.rok_placila = rok_placila
-        self.prejemnik_iban = prejemnik_iban
-        self.prejemnik_referenca = prejemnik_referenca
-        self.prejemnik_ime = prejemnik_ime
-        self.prejemnik_ulica = prejemnik_ulica
-        self.prejemnik_kraj = prejemnik_kraj
+    def __init__(self, **kwargs):
+        for k in kwargs:
+            setattr(self, k, kwargs[k])
 
     @staticmethod
     def from_dict(source: dict) -> "UPNQR":
-        return UPNQR(
-            placnik_ime=source.get("placnik_ime"),
-            placnik_ulica=source.get("placnik_ulica"),
-            placnik_kraj=source.get("placnik_kraj"),
-            znesek=source.get("znesek"),
-            koda_namena=source.get("koda_namena"),
-            namen_placila=source.get("namen_placila"),
-            rok_placila=source.get("rok_placila"),
-            prejemnik_iban=source.get("prejemnik_iban"),
-            prejemnik_referenca=source.get("prejemnik_referenca"),
-            prejemnik_ime=source.get("prejemnik_ime"),
-            prejemnik_ulica=source.get("prejemnik_ulica"),
-            prejemnik_kraj=source.get("prejemnik_kraj"),
-        )
-        znesek
+        upnqr = UPNQR(**source)
+        upnqr._source_dict = source
+        return upnqr
 
-    @staticmethod
-    def validate_fields(source: dict) -> Generator[ValidationError, Any, None]:
+    def validate_fields(self) -> Generator[ValidationError, Any, None]:
         with open("upn_qr_schema.json") as f:
             json_schema = json.load(f)
 
@@ -107,7 +95,7 @@ class UPNQR:
         my_validator = custom_validator(
             json_schema, format_checker=format_checker,
         )
-        return my_validator.iter_errors(source)
+        return my_validator.iter_errors(self._source_dict)
 
     def make_qr_code(self) -> PilImage:
         qr = qrcode.QRCode(
