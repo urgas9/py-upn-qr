@@ -43,7 +43,7 @@ class UPNQR:
     prejemnik_ulica: str = None
     prejemnik_kraj: str = None
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         for k in kwargs:
             setattr(self, k, kwargs[k])
 
@@ -109,7 +109,7 @@ class UPNQR:
 
         return qr.make_image(fill_color="black", back_color="white")
 
-    def _qr_data_string(self):
+    def _qr_data_string(self) -> str:
 
         def formatted_znesek() -> str:
             result = f"{self.znesek}00" if "," not in self.znesek else self.znesek
