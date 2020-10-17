@@ -4,21 +4,18 @@
 #
 #    pip-compile requirements.in
 #
-attrs==19.3.0             # via jsonschema
-boto3==1.13.17            # via -r requirements.in
-botocore==1.16.17         # via boto3, s3transfer
-docutils==0.15.2          # via botocore
-importlib-metadata==1.6.0  # via jsonschema
+attrs==20.2.0             # via jsonschema
+boto3==1.15.18            # via -r requirements.in
+botocore==1.18.18         # via boto3, s3transfer
 jmespath==0.10.0          # via boto3, botocore
 jsonschema==3.2.0         # via -r requirements.in
-pillow==7.1.2             # via qrcode
-pyrsistent==0.16.0        # via jsonschema
+pillow==8.0.0             # via qrcode
+pyrsistent==0.17.3        # via jsonschema
 python-dateutil==2.8.1    # via botocore
 qrcode[pil]==6.1          # via -r requirements.in
 s3transfer==0.3.3         # via boto3
-six==1.15.0               # via jsonschema, pyrsistent, python-dateutil, qrcode
-urllib3==1.25.9           # via botocore
-zipp==3.1.0               # via importlib-metadata
+six==1.15.0               # via jsonschema, python-dateutil, qrcode
+urllib3==1.25.10          # via botocore
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
