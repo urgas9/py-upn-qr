@@ -7,7 +7,8 @@
     "prejemnik_referenca",
     "prejemnik_ime",
     "prejemnik_ulica",
-    "prejemnik_kraj"
+    "prejemnik_kraj",
+    "znesek"
   ],
   "properties": {
     "placnik_ime": {
