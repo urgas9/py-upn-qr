@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 from typing import Any, Generator
 
+import PIL
 import qrcode
 from jsonschema import Draft7Validator, FormatChecker, ValidationError, validators
 from qrcode.image.pil import PilImage
@@ -97,7 +98,7 @@ class UPNQR:
         )
         return my_validator.iter_errors(self._source_dict)
 
-    def make_qr_code(self) -> PilImage:
+    def make_qr_code(self, width_px=256) -> PilImage:
         qr = qrcode.QRCode(
             version=15,
             error_correction=qrcode.constants.ERROR_CORRECT_M,
@@ -107,7 +108,9 @@ class UPNQR:
         qr.add_data(self._qr_data_string())
         qr.make(fit=True)
 
-        return qr.make_image(fill_color="black", back_color="white")
+        image = qr.make_image(fill_color="black", back_color="white")
+        image.thumbnail([width_px, width_px], PIL.Image.ANTIALIAS)
+        return image
 
     def _qr_data_string(self) -> str:
 
