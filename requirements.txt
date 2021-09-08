@@ -18,7 +18,7 @@ jmespath==0.10.0
     #   botocore
 jsonschema==3.2.0
     # via -r requirements.in
-pillow==8.2.0
+pillow==8.3.2
     # via qrcode
 pyrsistent==0.17.3
     # via jsonschema
