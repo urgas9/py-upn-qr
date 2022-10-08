@@ -5,7 +5,7 @@
     "config:base"
   ],
   "schedule":[
-    "after 9am and before 6pm every Monday"
+    "after 9am and before 6pm on monday"
   ],
   "packageRules": [
     {
