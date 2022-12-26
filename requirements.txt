@@ -8,7 +8,7 @@ attrs==22.1.0
     # via jsonschema
 boto3==1.26.37
     # via -r requirements.in
-botocore==1.29.32
+botocore==1.29.37
     # via
     #   boto3
     #   s3transfer
