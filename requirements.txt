@@ -6,7 +6,7 @@
 #
 attrs==22.2.0
     # via jsonschema
-boto3==1.26.129
+boto3==1.26.133
     # via -r requirements.in
 botocore==1.29.129
     # via
