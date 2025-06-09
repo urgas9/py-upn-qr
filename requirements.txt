@@ -36,5 +36,5 @@ six==1.17.0
     # via python-dateutil
 urllib3==1.26.20
     # via botocore
-zipp==3.22.0
+zipp==3.23.0
     # via importlib-resources
