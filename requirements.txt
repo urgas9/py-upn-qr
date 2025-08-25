@@ -18,7 +18,7 @@ jmespath==1.0.1
     # via
     #   boto3
     #   botocore
-jsonschema==4.25.0
+jsonschema==4.25.1
     # via -r requirements.in
 pillow==9.5.0
     # via qrcode
