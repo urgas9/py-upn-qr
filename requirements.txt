@@ -28,7 +28,7 @@ pyrsistent==0.20.0
     # via jsonschema
 python-dateutil==2.9.0.post0
     # via botocore
-qrcode[pil]==7.4.2
+qrcode[pil]==8.2
     # via -r requirements.in
 s3transfer==0.13.1
     # via boto3
